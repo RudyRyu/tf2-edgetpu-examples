@@ -21,6 +21,7 @@ detection_model, model_config = train.builder.build(
     config['model_type'],
     config['input_shape'],
     config['num_classes'],
+    config['meta_info'],
     config['checkpoint'])
 
 tf.keras.backend.set_learning_phase(True)
@@ -70,10 +71,11 @@ try:
         validation_data=test_ds,
         epochs=config['epoch'],
         callbacks=callbacks)
-except KeyboardInterrupt:
+except (Exception, KeyboardInterrupt) as e:
     print()
     print('============================================')
-    print('         Training is canceled.')
+    print('Training is canceled.')
+    print(e)
     print('============================================')
     print()
 
