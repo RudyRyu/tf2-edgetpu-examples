@@ -1,4 +1,6 @@
 import os
+
+from tensorflow.python.platform.tf_logging import error
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 import train.builder
@@ -12,6 +14,8 @@ from train.utils import export_tflite_graph
 import tensorflow as tf
 from tensorflow.keras.callbacks import ReduceLROnPlateau
 from tensorflow.keras.callbacks import EarlyStopping
+# import numpy as np
+# import cv2
 
 config = train.config.config
 
@@ -52,9 +56,9 @@ custom_model.compile(optimizer=optimizer, run_eagerly=True)
 checkpoint_dir = './checkpoints/{}/best'.format(config['model_name'])
 callbacks = [
     DetectorCheckpoint(detection_model, monitor='val_loss', checkpoint_dir=checkpoint_dir),
-    ReduceLROnPlateau(monitor='val_loss', factor=0.1, mode='min', patience=2, min_lr=1e-5, verbose=1),
+    ReduceLROnPlateau(monitor='val_loss', factor=0.1, mode='min', patience=5, min_lr=1e-5, verbose=1),
     LogCallback('./logs/'+config['model_name']),
-    EarlyStopping(monitor='val_loss', mode='min', patience=5, restore_best_weights=True)]
+    EarlyStopping(monitor='val_loss', mode='min', patience=15, restore_best_weights=True)]
 
 meta_info_path = './checkpoints/{}'
 meta_info_path = meta_info_path.format(config['model_name'])
@@ -81,4 +85,29 @@ except (Exception, KeyboardInterrupt) as e:
 
 export_tflite_graph(meta_info_path+'/meta_info.config', meta_info_path)
 
+# with open('lp_test2.jpg', 'rb') as f:
+#     jpeg_binary = f.read()
+# image_ori = tf.io.decode_image(jpeg_binary, channels=3, expand_animations=False)
+# image = tf.cast(image_ori, tf.float32)
+# image = (2. / 255.) * image - 1.
+# image = tf.expand_dims(image, 0)
+# image = tf.image.resize(image, (512, 512))
+# shapes = [[512, 512, 3]]
+# prediction_dict = detection_model.predict(image, shapes)
+# detections = detection_model.postprocess(prediction_dict, shapes)
+# print(detections['detection_scores'][0].numpy())
+# img = image_ori.numpy()
+# for score, box in zip(detections['detection_scores'][0].numpy(), detections['detection_boxes'][0].numpy()):
+#     if score > 0.4:
+#         print(box)
+#         h = img.shape[0]
+#         w = img.shape[1]
+#         box[0] = int(box[0] * h)
+#         box[1] = int(box[1] * w)
+#         box[2] = int(box[2] * h)
+#         box[3] = int(box[3] * w)
+#         box = box.astype(np.int32)
+#         print(box)
+#         img = cv2.rectangle(img, (box[1], box[0]), (box[3],box[2]), (0, 0, 255), 2)
 
+# cv2.imwrite('{}.jpg'.format('result'), img)
