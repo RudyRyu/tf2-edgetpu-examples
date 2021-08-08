@@ -5,12 +5,12 @@ ENV HOME /root
 WORKDIR $HOME
 RUN curl -s -N https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
 RUN echo "deb https://packages.cloud.google.com/apt coral-edgetpu-stable main" | tee /etc/apt/sources.list.d/coral-edgetpu.list
-RUN apt-get update
-RUN apt-get install -y wget zip git edgetpu-compiler libgl1-mesa-glx
+RUN apt update
+RUN apt install -y wget zip git edgetpu-compiler libgl1-mesa-glx
 RUN pip install pillow tf_slim tensorflow_addons scipy matplotlib pyyaml dataclasses opencv-python
 
 # Clone main repository
-RUN git clone https://github.com/shi510/tf2-edgetpu-examples
+RUN git clone https://github.com/RudyRyu/tf2-edgetpu-examples.git
 
 # Install protoc
 RUN wget https://github.com/protocolbuffers/protobuf/releases/download/v3.17.0/protoc-3.17.0-linux-x86_64.zip
