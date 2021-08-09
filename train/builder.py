@@ -1,7 +1,7 @@
 import os
 
 from object_detection.utils import config_util
-from object_detection.builders import model_builder
+from model_utils import model_builder
 
 import tensorflow.compat.v2 as tf
 
