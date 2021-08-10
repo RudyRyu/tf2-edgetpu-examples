@@ -1,21 +1,3 @@
-# Lint as: python2, python3
-# Copyright 2018 The TensorFlow Authors. All Rights Reserved.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-# ==============================================================================
-
-"""SSDFeatureExtractor for MobilenetV2 features."""
-
 import tensorflow.compat.v1 as tf
 
 from object_detection.meta_architectures import ssd_meta_arch
@@ -24,11 +6,10 @@ from object_detection.models.keras_models import mobilenet_v2
 from object_detection.utils import ops
 from object_detection.utils import shape_utils
 
-import common
 
-
-class SSDDigitSHKerasFeatureExtractor(ssd_meta_arch.SSDKerasFeatureExtractor):
-  """SSD Feature Extractor using MobilenetV2 features."""
+class SSDShDigitKerasFeatureExtractor(
+    ssd_meta_arch.SSDKerasFeatureExtractor):
+  """SSD Feature Extractor using TextNet features."""
 
   def __init__(self,
                is_training,
@@ -43,7 +24,7 @@ class SSDDigitSHKerasFeatureExtractor(ssd_meta_arch.SSDKerasFeatureExtractor):
                num_layers=6,
                override_base_feature_extractor_hyperparams=False,
                name=None):
-    """MobileNetV2 Feature Extractor for SSD Models.
+    """TextNet Feature Extractor for SSD Models.
 
     Mobilenet v2 (experimental), designed by sandler@. More details can be found
     in //knowledge/cerebra/brain/compression/mobilenet/mobilenet_experimental.py
@@ -76,7 +57,7 @@ class SSDDigitSHKerasFeatureExtractor(ssd_meta_arch.SSDKerasFeatureExtractor):
       name: A string name scope to assign to the model. If 'None', Keras
         will auto-generate one from the class name.
     """
-    super(SSDDigitSHKerasFeatureExtractor, self).__init__(
+    super(SSDShDigitKerasFeatureExtractor, self).__init__(
         is_training=is_training,
         depth_multiplier=depth_multiplier,
         min_depth=min_depth,
@@ -88,52 +69,34 @@ class SSDDigitSHKerasFeatureExtractor(ssd_meta_arch.SSDKerasFeatureExtractor):
         use_depthwise=use_depthwise,
         num_layers=num_layers,
         override_base_feature_extractor_hyperparams=
-          override_base_feature_extractor_hyperparams,
+        override_base_feature_extractor_hyperparams,
         name=name)
+    self._feature_map_layout = {
+        'from_layer': ['f1', 'f2', 'f3'],
+        'layer_depth': [-1, -1, -1],
+        'use_depthwise': self._use_depthwise,
+        'use_explicit_padding': self._use_explicit_padding,
+    }
 
-    self._feature_map_layout = None
     self.classification_backbone = None
     self.feature_map_generator = None
 
-  def build(self, input_shape_hwc):
+  def build(self, input_shape):
 
-    input_data = tf.keras.layers.Input(input_shape_hwc)
-    d = depth_multiplier
+    pass
+    # self.classification_backbone = None
 
-    x = common.convolutional(input_data, (3, 3, 3, 32*d))
-    x = tf.keras.layers.MaxPool2D(2, 2, 'same')(x)
-    x = common.convolutional(x, (3, 3, 32*d, 64*d))
-    x = tf.keras.layers.MaxPool2D(2, 2, 'same')(x)
-    x = common.convolutional(x, (3, 3, 64*d, 64*d))
-    x = common.convolutional(x, (1, 1, 64*d, 32*d))
-    x = common.convolutional(x, (3, 3, 32*d, 64*d))
-
-    route1 = x
-    route1 = common.reorg(route1, 2)
-
-    x = tf.keras.layers.MaxPool2D(2, 2, 'same')(x)
-    x = common.convolutional(x, (3, 3, 64*d, 128*d))
-    x = common.convolutional(x, (1, 1, 128*d, 64*d))
-    x = common.convolutional(x, (3, 3, 64*d, 128*d))
-
-    x = tf.concat([route1, x], axis=-1)
-    out1 = common.convolutional(x, (3, 3, 384*d, 128*d))
-
-    self.classification_backbone = tf.keras.Model(
-        inputs=input_data,
-        outputs=[out1])
-
-    self.feature_map_generator = (
-        feature_map_generators.KerasMultiResolutionFeatureMaps(
-            feature_map_layout=self._feature_map_layout,
-            depth_multiplier=self._depth_multiplier,
-            min_depth=self._min_depth,
-            insert_1x1_conv=True,
-            is_training=self._is_training,
-            conv_hyperparams=self._conv_hyperparams,
-            freeze_batchnorm=self._freeze_batchnorm,
-            name='FeatureMaps'))
-    self.built = True
+    # self.feature_map_generator = (
+    #     feature_map_generators.KerasMultiResolutionFeatureMaps(
+    #         feature_map_layout=self._feature_map_layout,
+    #         depth_multiplier=self._depth_multiplier,
+    #         min_depth=self._min_depth,
+    #         insert_1x1_conv=True,
+    #         is_training=self._is_training,
+    #         conv_hyperparams=self._conv_hyperparams,
+    #         freeze_batchnorm=self._freeze_batchnorm,
+    #         name='FeatureMaps'))
+    # self.built = True
 
   def preprocess(self, resized_inputs):
     """SSD preprocessing.
