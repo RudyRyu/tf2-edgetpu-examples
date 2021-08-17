@@ -9,7 +9,7 @@ from train.input_pipeline import make_tfdataset
 from train.custom_model import CustomDetectorModel
 from train.custom_callback import LogCallback
 from train.custom_callback import DetectorCheckpoint
-from train.utils import export_tflite_graph
+from model_utils.export_tflite_graph import export_tflite_graph
 
 import tensorflow as tf
 from tensorflow.keras.callbacks import ReduceLROnPlateau

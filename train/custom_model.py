@@ -1,4 +1,4 @@
-from train.utils import GradientAccumulatorModel
+from model_utils.grad_accum_model import GradientAccumulatorModel
 
 import tensorflow as tf
 
