@@ -1,7 +1,12 @@
 import os
 
+import tensorflow as tf
 from tensorflow.python.platform.tf_logging import error
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+from tensorflow.keras.callbacks import ReduceLROnPlateau
+from tensorflow.keras.callbacks import EarlyStopping
+# import numpy as np
+# import cv2
 
 import train.builder
 import train.config
@@ -11,11 +16,6 @@ from train.custom_callback import LogCallback
 from train.custom_callback import DetectorCheckpoint
 from model_utils.export_tflite_graph import export_tflite_graph
 
-import tensorflow as tf
-from tensorflow.keras.callbacks import ReduceLROnPlateau
-from tensorflow.keras.callbacks import EarlyStopping
-# import numpy as np
-# import cv2
 
 config = train.config.config
 

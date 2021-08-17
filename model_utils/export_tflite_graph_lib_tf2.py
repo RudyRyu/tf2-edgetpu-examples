@@ -22,7 +22,7 @@ import tensorflow.compat.v2 as tf
 from object_detection.builders import post_processing_builder
 from object_detection.core import box_list
 from object_detection.core import standard_fields as fields
-import model_builder
+from model_utils import model_builder
 
 _DEFAULT_NUM_CHANNELS = 3
 _DEFAULT_NUM_COORD_BOX = 4
