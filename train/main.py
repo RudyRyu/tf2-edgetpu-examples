@@ -60,8 +60,7 @@ callbacks = [
     LogCallback('./logs/'+config['model_name']),
     EarlyStopping(monitor='val_loss', mode='min', patience=15, restore_best_weights=True)]
 
-meta_info_path = './checkpoints/{}'
-meta_info_path = meta_info_path.format(config['model_name'])
+meta_info_path = './checkpoints/{}'.format(config['model_name'])
 try:
     os.makedirs(meta_info_path, exist_ok=True)
     with open(meta_info_path+'/meta_info.config', 'w') as f:
