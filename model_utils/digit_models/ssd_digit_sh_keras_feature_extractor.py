@@ -2,9 +2,10 @@ import tensorflow.compat.v1 as tf
 
 from object_detection.meta_architectures import ssd_meta_arch
 from object_detection.models import feature_map_generators
-from object_detection.models.keras_models import mobilenet_v2
 from object_detection.utils import ops
 from object_detection.utils import shape_utils
+
+from model_utils import common
 
 
 class SSDShDigitKerasFeatureExtractor(
@@ -72,8 +73,8 @@ class SSDShDigitKerasFeatureExtractor(
         override_base_feature_extractor_hyperparams,
         name=name)
     self._feature_map_layout = {
-        'from_layer': ['f1', 'f2', 'f3'],
-        'layer_depth': [-1, -1, -1],
+        'from_layer': ['f1'],
+        'layer_depth': [-1],
         'use_depthwise': self._use_depthwise,
         'use_explicit_padding': self._use_explicit_padding,
     }
@@ -82,22 +83,44 @@ class SSDShDigitKerasFeatureExtractor(
     self.feature_map_generator = None
 
   def build(self, input_shape):
+    f = 1
+    input_layer = tf.keras.layers.Input([None, None, 3])
 
-    pass
-    # self.classification_backbone = None
+    x = common.convolutional(input_layer, (3, 3, 3, 32*f))
+    x = tf.keras.layers.MaxPool2D(2, 2, 'same')(x)
+    x = common.convolutional(x, (3, 3, 32*f, 64*f))
+    x = tf.keras.layers.MaxPool2D(2, 2, 'same')(x)
+    x = common.convolutional(x, (3, 3, 64*f, 64*f))
+    x = common.convolutional(x, (1, 1, 64*f, 32*f))
+    x = common.convolutional(x, (3, 3, 32*f, 64*f))
 
-    # self.feature_map_generator = (
-    #     feature_map_generators.KerasMultiResolutionFeatureMaps(
-    #         feature_map_layout=self._feature_map_layout,
-    #         depth_multiplier=self._depth_multiplier,
-    #         min_depth=self._min_depth,
-    #         insert_1x1_conv=True,
-    #         is_training=self._is_training,
-    #         conv_hyperparams=self._conv_hyperparams,
-    #         freeze_batchnorm=self._freeze_batchnorm,
-    #         name='FeatureMaps'))
-    # self.built = True
+    route1 = x
+    route1 = common.reorg(route1, 2)
 
+    x = tf.keras.layers.MaxPool2D(2, 2, 'same')(x)
+    x = common.convolutional(x, (3, 3, 64*f, 128*f))
+    x = common.convolutional(x, (1, 1, 128*f, 64*f))
+    x = common.convolutional(x, (3, 3, 64*f, 128*f))
+
+    x = tf.concat([route1, x], axis=-1)
+    y1 = common.convolutional(x, (3, 3, 384*f, 128*f))
+
+    self.classification_backbone = tf.keras.Model(
+        inputs=input_layer,
+        outputs=[y1])
+
+    self.feature_map_generator = (
+        feature_map_generators.KerasMultiResolutionFeatureMaps(
+            feature_map_layout=self._feature_map_layout,
+            depth_multiplier=self._depth_multiplier,
+            min_depth=self._min_depth,
+            insert_1x1_conv=True,
+            is_training=self._is_training,
+            conv_hyperparams=self._conv_hyperparams,
+            freeze_batchnorm=self._freeze_batchnorm,
+            name='FeatureMaps'))
+    self.built = True
+    
   def preprocess(self, resized_inputs):
     """SSD preprocessing.
 
@@ -124,4 +147,13 @@ class SSDShDigitKerasFeatureExtractor(
       feature_maps: a list of tensors where the ith tensor has shape
         [batch, height_i, width_i, depth_i]
     """
-    pass
+    preprocessed_inputs = shape_utils.check_min_image_dim(
+        33, preprocessed_inputs)
+
+    image_features = self.classification_backbone(
+        ops.pad_to_multiple(preprocessed_inputs, self._pad_to_multiple))
+
+    feature_maps = self.feature_map_generator({
+        'f1': image_features[0])
+
+    return list(feature_maps.values())

@@ -68,6 +68,7 @@ if sys.version_info[0] >= 3:
 
 ## Custom Feature Extractors
 from model_utils.digit_models.ssd_mobilenetv2_digit_keras_feature_extractor import SSDMobileNetV2DigitKerasFeatureExtractor
+from model_utils.digit_models.ssd_digit_sh_keras_feature_extractor import SSDShDigitKerasFeatureExtractor
 
 
 SSD_KERAS_FEATURE_EXTRACTOR_CLASS_MAP = {
@@ -99,7 +100,8 @@ SSD_KERAS_FEATURE_EXTRACTOR_CLASS_MAP = {
         ssd_efficientnet_bifpn.SSDEfficientNetB7BiFPNKerasFeatureExtractor,
 
     # custom models
-    'ssd_mobilenet_v2_digit_keras': SSDMobileNetV2DigitKerasFeatureExtractor
+    'ssd_mobilenet_v2_digit_keras': SSDMobileNetV2DigitKerasFeatureExtractor,
+    'ssd_digit_sh_keras': SSDShDigitKerasFeatureExtractor
 }
 
 # FASTER_RCNN_KERAS_FEATURE_EXTRACTOR_CLASS_MAP = {
