@@ -22,7 +22,7 @@ class InferenceModel:
     def process(self, img):
         img = cv2.resize(img, (self.input_shape[1], self.input_shape[0]))
         if self.input_dtype == np.float32:
-            img = (img / 255.0).astype(np.float32)
+            img = ((2.0/255)*img - 1.0).astype(np.float32)
         img = np.expand_dims(img, 0)
         self.interpreter.set_tensor(self.input_index, img)
         self.interpreter.invoke()
