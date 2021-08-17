@@ -309,7 +309,8 @@ class CenterNetModule(tf.Module):
 
 def export_tflite_model(pipeline_config, trained_checkpoint_dir,
                         output_directory, max_detections, use_regular_nms,
-                        include_keypoints=False, label_map_path=''):
+                        include_keypoints=False, label_map_path='',
+                        checkpoint_file_name=''):
   """Exports inference SavedModel for TFLite conversion.
 
   NOTE: Only supports SSD meta-architectures for now, and the output model will
@@ -358,7 +359,14 @@ def export_tflite_model(pipeline_config, trained_checkpoint_dir,
 
   manager = tf.train.CheckpointManager(
       ckpt, trained_checkpoint_dir, max_to_keep=1)
-  status = ckpt.restore(manager.latest_checkpoint).expect_partial()
+  
+  if checkpoint_file_name:
+    checkpoint_file_path = os.path.join(trained_checkpoint_dir, 
+                                        checkpoint_file_name)
+    status = ckpt.restore(checkpoint_file_path).expect_partial()
+    print(checkpoint_file_path)
+  else:
+    status = ckpt.restore(manager.latest_checkpoint).expect_partial()
 
   # Getting the concrete function traces the graph and forces variables to
   # be constructed; only after this can we save the saved model.
