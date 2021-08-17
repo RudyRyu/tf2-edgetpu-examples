@@ -69,8 +69,8 @@ def make_tfdataset(tfrecord_path, batch_size, img_shape, enable_aug=False):
         return imgs, labels, boxes
 
     def _preprocess_images(imgs, labels, boxes):
-        # imgs = (2.0 / 255.0) * imgs - 1.0
-        imgs = imgs / 255.0
+        imgs = (2.0 / 255.0) * imgs - 1.0
+        # imgs = imgs / 255.0
         return imgs, labels, boxes
 
     ds = ds.shuffle(10000)
