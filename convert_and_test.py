@@ -36,7 +36,7 @@ for ext in exts:
     img_paths.extend(glob.glob(os.path.join(test_image_dir, ext)))
 os.makedirs(result_image_dir, exist_ok=True)
 
-print(img_paths)
+img_paths.sort()
 model = InferenceModel(tflite_path)
 for img_path in img_paths:
     img_name = os.path.basename(img_path)
