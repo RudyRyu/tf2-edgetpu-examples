@@ -21,7 +21,7 @@ def convert_tflite_int8(saved_model_path, calb_data, output_name, quant_level=0)
     def representative_dataset_gen():
         for n, data in enumerate(calb_data.take(1000)):
             x = data[0]
-            if n % 10 == 0:
+            if n % 200 == 0:
                 print(n, 'images are processed.')
             # Get sample input data as a numpy array in a method of your choosing.
             # The batch size should be 1.
