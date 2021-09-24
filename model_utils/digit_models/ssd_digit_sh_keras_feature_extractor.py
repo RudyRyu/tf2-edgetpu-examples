@@ -73,8 +73,8 @@ class SSDShDigitKerasFeatureExtractor(
         override_base_feature_extractor_hyperparams,
         name=name)
     self._feature_map_layout = {
-        'from_layer': ['f1'],
-        'layer_depth': [-1],
+        'from_layer': ['f1', 'f2'],
+        'layer_depth': [-1, -1],
         'use_depthwise': self._use_depthwise,
         'use_explicit_padding': self._use_explicit_padding,
     }
@@ -84,7 +84,7 @@ class SSDShDigitKerasFeatureExtractor(
 
   def build(self, input_shape):
     f = 1
-    input_layer = tf.keras.layers.Input([None, None, 3])
+    input_layer = tf.keras.layers.Input([64, 128, 3])
 
     x = common.convolutional(input_layer, (3, 3, 3, 32*f))
     x = tf.keras.layers.MaxPool2D(2, 2, 'same')(x)
@@ -103,11 +103,11 @@ class SSDShDigitKerasFeatureExtractor(
     x = common.convolutional(x, (3, 3, 64*f, 128*f))
 
     x = tf.concat([route1, x], axis=-1)
-    y1 = common.convolutional(x, (3, 3, 384*f, 128*f))
+    y2 = common.convolutional(x, (3, 3, 384*f, 128*f))
 
     self.classification_backbone = tf.keras.Model(
         inputs=input_layer,
-        outputs=[y1])
+        outputs=[route1, y2])
 
     self.feature_map_generator = (
         feature_map_generators.KerasMultiResolutionFeatureMaps(
@@ -154,6 +154,7 @@ class SSDShDigitKerasFeatureExtractor(
         ops.pad_to_multiple(preprocessed_inputs, self._pad_to_multiple))
 
     feature_maps = self.feature_map_generator({
-        'f1': image_features[0])
+        'f1': image_features[0],
+        'f2': image_features[1]})
 
     return list(feature_maps.values())
