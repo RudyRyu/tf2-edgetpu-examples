@@ -16,6 +16,7 @@ def convert_tflite_int8(saved_model_path, calb_data, output_name, quant_level=0)
         It can not be converted if the model contains not supported operators.
     """
     converter = tf.lite.TFLiteConverter.from_saved_model(saved_model_path)
+    converter.experimental_enable_resource_variables = True
     converter.optimizations = [tf.lite.Optimize.DEFAULT]
     def representative_dataset_gen():
         for n, data in enumerate(calb_data.take(1000)):
