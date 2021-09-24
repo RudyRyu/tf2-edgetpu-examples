@@ -22,7 +22,7 @@ import tensorflow.compat.v2 as tf
 from object_detection.builders import post_processing_builder
 from object_detection.core import box_list
 from object_detection.core import standard_fields as fields
-from model_utils import model_builder
+from model_utils import ssd_model_builder
 
 _DEFAULT_NUM_CHANNELS = 3
 _DEFAULT_NUM_COORD_BOX = 4
@@ -226,7 +226,7 @@ class CenterNetModule(tf.Module):
     if include_keypoints and label_map_path:
       pipeline_config.model.center_net.keypoint_label_map_path = label_map_path
     self._pipeline_config = pipeline_config
-    self._model = model_builder.build(
+    self._model = ssd_model_builder.build(
         self._pipeline_config.model, is_training=False)
 
   def get_model(self):
@@ -341,7 +341,7 @@ def export_tflite_model(pipeline_config, trained_checkpoint_dir,
   # Build the underlying model using pipeline config.
   # TODO(b/162842801): Add support for other architectures.
   if pipeline_config.model.WhichOneof('model') == 'ssd':
-    detection_model = model_builder.build(
+    detection_model = ssd_model_builder.build(
         pipeline_config.model, is_training=False)
     ckpt = tf.train.Checkpoint(model=detection_model)
     # The module helps build a TF SavedModel appropriate for TFLite conversion.

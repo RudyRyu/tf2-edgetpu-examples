@@ -1,20 +1,20 @@
 import os
 
 from object_detection.utils import config_util
-from model_utils import model_builder
+from model_utils import ssd_model_builder
 
 import tensorflow.compat.v2 as tf
 
 
 def build(model_type, input_shape, num_classes, meta_info, checkpoint_path=''):
     if model_type == 'MobileNetV2_SSD':
-        pipeline_config = 'train/builder_configs/ssd_mobilenet_v2.config'
+        pipeline_config = 'model_utils/builder_configs/ssd_mobilenet_v2.config'
     elif model_type == 'MobileNetV2_FPN_SSD':
-        pipeline_config = 'train/builder_configs/ssd_mobilenet_v2_fpnlite.config'
+        pipeline_config = 'model_utils/builder_configs/ssd_mobilenet_v2_fpnlite.config'
     elif model_type == 'EfficientDet_D0_SSD':
-        pipeline_config = 'train/builder_configs/ssd_efficientdet_d0.config'
+        pipeline_config = 'model_utils/builder_configs/ssd_efficientdet_d0.config'
     elif model_type == 'ResNet50V1_FPN_SSD':
-        pipeline_config = 'train/builder_configs/ssd_resnet50_v1_fpn.config'
+        pipeline_config = 'model_utils/builder_configs/ssd_resnet50_v1_fpn.config'
     else:
         raise 'Unknown model_type: given {}'.format(model_type)
 
@@ -33,7 +33,7 @@ def build(model_type, input_shape, num_classes, meta_info, checkpoint_path=''):
     if model_type == 'EfficientDet_D0_SSD':
         model_config.ssd.feature_extractor.bifpn.num_iterations = meta_info['bifpn']['num_iterations']
         model_config.ssd.feature_extractor.bifpn.num_filters = meta_info['bifpn']['num_filters']
-    detection_model = model_builder.build(model_config=model_config, is_training=True)
+    detection_model = ssd_model_builder.build(model_config=model_config, is_training=True)
 
     if os.path.exists(checkpoint_path):
         ckpt = tf.train.Checkpoint(model=detection_model)

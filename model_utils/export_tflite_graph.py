@@ -6,7 +6,7 @@ from google.protobuf import text_format
 from object_detection.protos import pipeline_pb2
 from model_utils import export_tflite_graph_lib_tf2
 
-import train.config
+import train
 
 config = train.config.config
 pprint(config)

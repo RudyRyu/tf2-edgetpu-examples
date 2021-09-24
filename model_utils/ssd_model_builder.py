@@ -32,18 +32,18 @@ from object_detection.builders import region_similarity_calculator_builder as si
 from object_detection.core import balanced_positive_negative_sampler as sampler
 from object_detection.core import post_processing
 from object_detection.core import target_assigner
-from object_detection.meta_architectures import center_net_meta_arch
-from object_detection.meta_architectures import context_rcnn_meta_arch
-from object_detection.meta_architectures import deepmac_meta_arch
-from object_detection.meta_architectures import faster_rcnn_meta_arch
-from object_detection.meta_architectures import rfcn_meta_arch
+# from object_detection.meta_architectures import center_net_meta_arch
+# from object_detection.meta_architectures import context_rcnn_meta_arch
+# from object_detection.meta_architectures import deepmac_meta_arch
+# from object_detection.meta_architectures import faster_rcnn_meta_arch
+# from object_detection.meta_architectures import rfcn_meta_arch
 from object_detection.meta_architectures import ssd_meta_arch
-from object_detection.predictors.heads import mask_head
-from object_detection.protos import losses_pb2
+# from object_detection.predictors.heads import mask_head
+# from object_detection.protos import losses_pb2
 from object_detection.protos import model_pb2
-from object_detection.utils import label_map_util
+# from object_detection.utils import label_map_util
 from object_detection.utils import ops
-from object_detection.utils import spatial_transform_ops as spatial_ops
+# from object_detection.utils import spatial_transform_ops as spatial_ops
 from object_detection.utils import tf_version
 
 ## Feature Extractors for TF2
