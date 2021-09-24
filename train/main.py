@@ -8,7 +8,7 @@ from tensorflow.keras.callbacks import EarlyStopping
 # import numpy as np
 # import cv2
 
-import train.builder
+import model_utils.builder
 import train.config
 from train.input_pipeline import make_tfdataset
 from train.custom_model import CustomDetectorModel
@@ -21,7 +21,7 @@ config = train.config.config
 
 tf.keras.backend.clear_session()
 
-detection_model, model_config = train.builder.build(
+detection_model, model_config = model_utils.builder.build(
     config['model_type'],
     config['input_shape'],
     config['num_classes'],
