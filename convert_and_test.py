@@ -15,7 +15,7 @@ saved_model_path = f'./checkpoints/{model_name}/saved_model/'
 img_size_wh = [128,64]
 dataset = 'digit_train.tfrecord'
 quant_level = 2
-tflite_path = f'{model_name}_{checkpoint_name}.tflite'
+tflite_path = f'./tflite_models/{model_name}_{checkpoint_name}.tflite'
 
 test_image_dir = 'inference/test_images'
 result_image_dir = 'inference/result_images'
