@@ -8,8 +8,8 @@ from tensorflow.keras.callbacks import EarlyStopping
 # import numpy as np
 # import cv2
 
-import model_utils.builder
-import train.config
+import model_utils
+import train
 from train.input_pipeline import make_tfdataset
 from train.custom_model import CustomDetectorModel
 from train.custom_callback import LogCallback
