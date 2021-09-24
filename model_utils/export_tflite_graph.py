@@ -1,3 +1,5 @@
+from pprint import pprint
+
 import tensorflow as tf
 
 from google.protobuf import text_format
@@ -7,7 +9,7 @@ from model_utils import export_tflite_graph_lib_tf2
 import train.config
 
 config = train.config.config
-print(config)
+pprint(config)
 
 
 def export_tflite_graph(pipeline_config_path, checkpoint_path, 
