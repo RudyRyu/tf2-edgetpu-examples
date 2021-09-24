@@ -24,7 +24,3 @@ RUN cd tensorflow_models && git checkout 927e31aa1de2d23fd62b7b2644b67b29d658b94
 
 # Generate proto files
 RUN protoc --proto_path=tensorflow_models/research tensorflow_models/research/object_detection/protos/*.proto --python_out=tensorflow_models/research
-
-# Regist PYTHONPATH
-ENV PROJECT_ROOT ${HOME}/tf2-edgetpu-examples
-ENV PYTHONPATH ${PROJECT_ROOT}:${PROJECT_ROOT}/tensorflow_models:${PROJECT_ROOT}/tensorflow_models/research
