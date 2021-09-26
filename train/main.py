@@ -32,7 +32,6 @@ tf.keras.backend.set_learning_phase(True)
 
 batch_size = config['batch_size']
 learning_rate = config['learning_rate']
-num_batches = config['batch_size']
 
 optimizer = tf.keras.optimizers.Adam(learning_rate=learning_rate)
 
