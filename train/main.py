@@ -22,7 +22,7 @@ config = train.config.config
 tf.keras.backend.clear_session()
 
 detection_model, model_config = model_utils.custom_builder.build(
-    config['model_type'],
+    config['base_ssd_config_path'],
     config['input_shape'],
     config['num_classes'],
     config['meta_info'],
