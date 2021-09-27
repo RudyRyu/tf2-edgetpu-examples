@@ -12,8 +12,7 @@ import model_utils.custom_builder
 import train.config
 from train.input_pipeline import make_tfdataset
 from train.custom_model import CustomDetectorModel
-from train.custom_callback import LogCallback
-from train.custom_callback import DetectorCheckpoint
+from train.custom_callback import LogCallback, DetectorCheckpoint
 from model_utils.export_tflite_graph import export_tflite_graph
 
 
@@ -22,7 +21,7 @@ config = train.config.config
 tf.keras.backend.clear_session()
 
 detection_model, model_config = model_utils.custom_builder.build(
-    config['base_ssd_config_path'],
+    config['base_config_path'],
     config['input_shape'],
     config['num_classes'],
     config['meta_info'],
@@ -33,15 +32,22 @@ tf.keras.backend.set_learning_phase(True)
 batch_size = config['batch_size']
 learning_rate = config['learning_rate']
 
-optimizer = tf.keras.optimizers.Adam(learning_rate=learning_rate)
+if config['optimizer'] == 'SGD':
+    optimizer = tf.keras.optimizers.SGD(
+        learning_rate=learning_rate,
+        momentum=0.9,
+        nesterov=True)
+else:
+    optimizer = tf.keras.optimizers.Adam(learning_rate=learning_rate)
 
 train_ds = make_tfdataset(
-    config['train_file'],
+    config['train_tfrecord'],
     batch_size,
     config['input_shape'][:2],
     enable_aug=True)
+
 test_ds = make_tfdataset(
-    config['test_file'],
+    config['test_tfrecord'],
     batch_size,
     config['input_shape'][:2])
 

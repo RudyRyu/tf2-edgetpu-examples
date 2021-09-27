@@ -6,9 +6,9 @@ from model_utils import ssd_model_builder
 import tensorflow.compat.v2 as tf
 
 
-def build(base_ssd_config, input_shape, num_classes, 
+def build(base_config_path, input_shape, num_classes, 
           meta_info, checkpoint):
-    base_configs = config_util.get_configs_from_pipeline_file(base_ssd_config)
+    base_configs = config_util.get_configs_from_pipeline_file(base_config_path)
     
     # base config
     model_config = base_configs['model']

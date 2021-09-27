@@ -1,7 +1,7 @@
 config = {
     'model_name': 'ShDigit_v1_SSD_text_seg',
 
-    'base_ssd_config_path': 'model_utils/builder_configs/ssd_mobilenet_v2.config',
+    'base_config_path': 'model_utils/builder_configs/ssd_mobilenet_v2.config',
 
     # input shape == [height, width, channel]
     'input_shape' : [64, 128, 3],
