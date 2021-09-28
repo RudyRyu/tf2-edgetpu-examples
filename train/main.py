@@ -92,7 +92,7 @@ except (Exception, KeyboardInterrupt) as e:
     print(e)
     print('============================================')
     print()
-finally:
+else:
     export_tflite_graph(meta_info_path+'/meta_info.config', meta_info_path)
 
 # with open('lp_test2.jpg', 'rb') as f:
