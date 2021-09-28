@@ -10,7 +10,7 @@ from tensorflow.keras.callbacks import EarlyStopping
 
 import model_utils.custom_builder
 import train.config
-from train.input_pipeline import make_tfdataset
+from train.input_pipeline import generate_tfdataset
 from train.custom_model import CustomDetectorModel
 from train.custom_callback import LogCallback, DetectorCheckpoint
 from model_utils.export_tflite_graph import export_tflite_graph
@@ -40,16 +40,19 @@ if config['optimizer'] == 'SGD':
 else:
     optimizer = tf.keras.optimizers.Adam(learning_rate=learning_rate)
 
-train_ds = make_tfdataset(
+train_ds = generate_tfdataset(
     config['train_tfrecord'],
     batch_size,
     config['input_shape'][:2],
-    enable_aug=True)
+    augmentation=False, 
+    normalization=True)
 
-test_ds = make_tfdataset(
+test_ds = generate_tfdataset(
     config['test_tfrecord'],
     batch_size,
-    config['input_shape'][:2])
+    config['input_shape'][:2],
+    augmentation=False, 
+    normalization=True)
 
 custom_model = CustomDetectorModel(
     detection_model,
@@ -60,10 +63,13 @@ custom_model.compile(optimizer=optimizer, run_eagerly=True)
 
 checkpoint_dir = './checkpoints/{}/best'.format(config['model_name'])
 callbacks = [
-    DetectorCheckpoint(detection_model, monitor='val_loss', checkpoint_dir=checkpoint_dir),
-    ReduceLROnPlateau(monitor='val_loss', factor=0.1, mode='min', patience=5, min_lr=1e-5, verbose=1),
+    DetectorCheckpoint(detection_model, 
+        monitor='val_loss', checkpoint_dir=checkpoint_dir),
+    ReduceLROnPlateau(monitor='val_loss', factor=0.1, mode='min', patience=5, 
+        min_lr=1e-5, verbose=1),
     LogCallback('./logs/'+config['model_name']),
-    EarlyStopping(monitor='val_loss', mode='min', patience=15, restore_best_weights=True)]
+    EarlyStopping(monitor='val_loss', mode='min', patience=15, 
+        restore_best_weights=True)]
 
 meta_info_path = './checkpoints/{}'.format(config['model_name'])
 try:
@@ -86,8 +92,8 @@ except (Exception, KeyboardInterrupt) as e:
     print(e)
     print('============================================')
     print()
-
-export_tflite_graph(meta_info_path+'/meta_info.config', meta_info_path)
+finally:
+    export_tflite_graph(meta_info_path+'/meta_info.config', meta_info_path)
 
 # with open('lp_test2.jpg', 'rb') as f:
 #     jpeg_binary = f.read()

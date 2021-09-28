@@ -67,8 +67,8 @@ if sys.version_info[0] >= 3:
     from object_detection.models import ssd_efficientnet_bifpn_feature_extractor as ssd_efficientnet_bifpn
 
 ## Custom Feature Extractors
-from model_utils.custom_models.digit.ssd_mobilenetv2_digit_keras_feature_extractor import SSDMobileNetV2DigitKerasFeatureExtractor
-from model_utils.custom_models.digit.ssd_digit_sh_keras_feature_extractor import SSDShDigitKerasFeatureExtractor
+from digit.models.ssd_mobilenetv2_digit_keras_feature_extractor import SSDMobileNetV2DigitKerasFeatureExtractor
+from digit.models.ssd_digit_sh_keras_feature_extractor import SSDShDigitKerasFeatureExtractor
 
 
 SSD_KERAS_FEATURE_EXTRACTOR_CLASS_MAP = {
