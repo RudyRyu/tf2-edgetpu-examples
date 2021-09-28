@@ -1,3 +1,5 @@
+import argparse
+import json
 import os
 
 import tensorflow as tf
@@ -9,14 +11,27 @@ from tensorflow.keras.callbacks import EarlyStopping
 # import cv2
 
 import model_utils.custom_builder
-import train.config
+from model_utils.export_tflite_graph import export_tflite_graph
+# import train.config
 from train.input_pipeline import generate_tfdataset
 from train.custom_model import CustomDetectorModel
 from train.custom_callback import LogCallback, DetectorCheckpoint
-from model_utils.export_tflite_graph import export_tflite_graph
 
 
-config = train.config.config
+# config = train.config.config
+
+argparser = argparse.ArgumentParser(description='config')
+argparser.add_argument(
+    '-c',
+    '--conf',
+    required=True,
+    default='train/config.py',
+    help='path to a configuration file')
+
+args = argparser.parse_args()
+
+with open(args.conf) as config_buffer:
+    config = json.loads(config_buffer.read())
 
 tf.keras.backend.clear_session()
 

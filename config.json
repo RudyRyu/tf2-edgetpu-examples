@@ -1,0 +1,48 @@
+{
+    "model_name": "mobilenetv2_keras",
+
+    "base_config_path": "model_utils/builder_configs/ssd_mobilenet_v2.config",
+
+    "__comment__": "input shape == [height, width, channel]",
+    "input_shape" : [64, 128, 3],
+
+    "num_classes": 17,
+    
+    "__comment__": "total batch size == batch_size * num_grad_accum",
+    "batch_size" : 256,
+    "num_grad_accum": 1,
+
+    "epoch" : 100,
+
+    "__comment__": "initial learning rate",
+    "learning_rate" : 1e-4,
+
+    "__comment__": [
+        "1. Adam",
+        "2. SGD (with momentum=0.9 and nesterov=True)"
+    ],
+    "optimizer" : "Adam",
+
+    "meta_info":{
+        "__comment__": [
+            "1. ssd_mobilenet_v2_keras",
+            "2"
+        ],
+        "feature_extractor": "ssd_mobilenet_v2_keras",
+        "num_layers": 2,
+
+        "matched_threshold": 0.5,
+        "unmatched_threshold": 0.5,
+        "base_anchor_height": 1.0,
+        "base_anchor_width": 1.0
+    },
+
+    "__comment__": "Restore weights from checkpoint",
+    "checkpoint": {
+        "dir": "checkpoints/ShDigit_v1_SSD_text_seg/",
+        "name": "best-50"
+    },
+
+    "train_tfrecord": "data/digit_train.tfrecord",
+    "test_tfrecord": "data/digit_valid.tfrecord"
+}

@@ -6,11 +6,6 @@ from google.protobuf import text_format
 from object_detection.protos import pipeline_pb2
 from model_utils import export_tflite_graph_lib_tf2
 
-import train
-
-config = train.config.config
-pprint(config)
-
 
 def export_tflite_graph(pipeline_config_path, checkpoint_path, 
                         checkpoint_name=''):
@@ -34,5 +29,6 @@ def export_tflite_graph(pipeline_config_path, checkpoint_path,
 
 
 if __name__ == '__main__':
-    meta_info_path = './checkpoints/{}'.format(config['model_name'])
-    export_tflite_graph(meta_info_path+'/meta_info.config', meta_info_path)
+    pass
+    # meta_info_path = './checkpoints/{}'.format(config['model_name'])
+    # export_tflite_graph(meta_info_path+'/meta_info.config', meta_info_path)
