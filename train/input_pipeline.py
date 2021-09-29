@@ -40,9 +40,10 @@ def generate_tfdataset(tfrecord_path, batch_size, image_size_hw,
     
     def _preprocess(image, label_list, box_list):
         if augmentation:
-            for f in [aug.random_color, aug.blur, aug.gray]:
-                if tf.random.uniform([], 0.0, 1.0) > 0:
-                    image = f(image)
+            image, box_list = tf.numpy_function(
+                func=aug.augmentation_pipeline,
+                inp=[image, box_list],
+                Tout=[tf.float32, tf.float32])
     
         if normalization:
             image = (2.0 / 255.0) * image - 1.0
