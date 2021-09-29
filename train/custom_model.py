@@ -80,7 +80,7 @@ class CustomDetectorModel(GradientAccumulatorModel):
         batch_size = len(label_lists)
         shapes = tf.constant(batch_size*[self.input_shape_hwc], dtype=tf.int32)
         self.detection_model.provide_groundtruth(
-            groundtruth_box_lists_list=box_lists,
+            groundtruth_boxes_list=box_lists,
             groundtruth_classes_list=label_lists)
         prediction_dict = self([images, shapes], training=False)
         losses_dict = self.detection_model.loss(prediction_dict, shapes)
