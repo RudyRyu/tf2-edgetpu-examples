@@ -39,12 +39,19 @@ def generate_tfdataset(tfrecord_path, batch_size, image_size_hw,
         return image, label_list, box_list
     
     def _preprocess(image, label_list, box_list):
+        
+        image_shape = image.shape
+        box_shape = box_list.shape
+
         if augmentation:
             image, box_list = tf.numpy_function(
                 func=aug.augmentation_pipeline,
                 inp=[image, box_list],
                 Tout=[tf.float32, tf.float32])
-    
+
+            image = tf.ensure_shape(image, image_shape)
+            box_list  = tf.ensure_shape(box_list, box_shape)
+
         if normalization:
             image = (2.0 / 255.0) * image - 1.0
 
