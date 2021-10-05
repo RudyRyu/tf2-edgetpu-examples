@@ -5,7 +5,6 @@ from pprint import pprint
 
 import cv2
 import numpy as np
-import matplotlib.pyplot as plt
 import tensorflow as tf
 from tensorflow.python.platform.tf_logging import error
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
