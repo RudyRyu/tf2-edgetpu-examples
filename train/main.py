@@ -1,6 +1,7 @@
 import argparse
 import json
 import os
+from pprint import pprint
 
 import tensorflow as tf
 from tensorflow.python.platform.tf_logging import error
@@ -25,7 +26,6 @@ argparser.add_argument(
     '-c',
     '--conf',
     required=True,
-    default='train/config.py',
     help='path to a configuration file')
 
 args = argparser.parse_args()
@@ -40,7 +40,7 @@ detection_model, model_config = model_utils.custom_builder.build(
     config['input_shape'],
     config['num_classes'],
     config['meta_info'],
-    config['checkpoint'])
+    config['checkpoint_path'])
 
 tf.keras.backend.set_learning_phase(True)
 
@@ -55,19 +55,8 @@ if config['optimizer'] == 'SGD':
 else:
     optimizer = tf.keras.optimizers.Adam(learning_rate=learning_rate)
 
-train_ds = generate_tfdataset(
-    config['train_tfrecord'],
-    batch_size,
-    config['input_shape'][:2],
-    augmentation=False, 
-    normalization=True)
 
-test_ds = generate_tfdataset(
-    config['test_tfrecord'],
-    batch_size,
-    config['input_shape'][:2],
-    augmentation=False, 
-    normalization=True)
+pprint(config)
 
 custom_model = CustomDetectorModel(
     detection_model,
@@ -75,6 +64,20 @@ custom_model = CustomDetectorModel(
     config['num_classes'],
     config['num_grad_accum'])
 custom_model.compile(optimizer=optimizer, run_eagerly=True)
+
+train_ds = generate_tfdataset(
+    config['train_tfrecord'],
+    batch_size,
+    config['input_shape'][:2],
+    augmentation=config['augmentation'], 
+    normalization=config['normalization'])
+
+test_ds = generate_tfdataset(
+    config['test_tfrecord'],
+    batch_size,
+    config['input_shape'][:2],
+    augmentation=False, 
+    normalization=config['normalization'])
 
 checkpoint_dir = './checkpoints/{}/best'.format(config['model_name'])
 callbacks = [
