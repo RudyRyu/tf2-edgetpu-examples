@@ -1,7 +1,7 @@
 {
     "model_name": "LPD_mobilenet_v2_keras_pretrained_dropout",
 
-    "base_config_path": "model_utils/builder_configs/ssd_mobilenet_v2_plate.config",
+    "base_config_path": "model_utils/builder_configs/ssd_mobilenet_v2_320x320_coco17_tpu-8.config",
 
     "__comment__": "input shape == [height, width, channel]",
     "input_shape" : [384, 512, 3],
@@ -35,7 +35,8 @@
     },
 
     "__comment__": "Restore weights from checkpoint",
-    "checkpoint_path": "pretrained_models/ssd_mobilenet_v2_320x320_coco17_tpu-8/checkpoint/ckpt-0",
+    "_checkpoint_path": "pretrained_models/ssd_mobilenet_v2_320x320_coco17_tpu-8/checkpoint/ckpt-0",
+    "checkpoint_path": "checkpoints/LPD_mobilenet_v2_keras_pretrained_v1/best-80", 
 
     "train_tfrecord": "/root/ijoon/disk2/rudy_dev/dataset/license_plate/plate_detection/train.tfrecord",
     "test_tfrecord": "/root/ijoon/disk2/rudy_dev/dataset/license_plate/plate_detection/test.tfrecord",
