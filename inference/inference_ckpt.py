@@ -79,11 +79,6 @@ while True:
         x2 = int(box[3] * input_shape_wh[0])
         y2 = int(box[2] * input_shape_wh[1])
 
-        pprint(score)
-        pprint(box)
-        pprint(class_id)
-        print(x1,y1,x2,y2)
-
         image = cv2.rectangle(image, (x1,y1), (x2,y2), (0,255,0), 2)
         
     cv2.imshow('res', image)
