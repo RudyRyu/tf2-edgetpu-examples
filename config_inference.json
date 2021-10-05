@@ -1,27 +1,13 @@
 {
-    "model_name": "LPD_mobilenet_v2_keras_pretrained_dropout",
-
+    "video_path": "/Users/rudy/Desktop/Development/sample/sample/vehicle/vehicle_sample2_1.mp4",
+    
+    
     "base_config_path": "model_utils/builder_configs/ssd_mobilenet_v2_320x320_coco17_tpu-8.config",
 
     "__comment__": "input shape == [height, width, channel]",
     "input_shape" : [384, 512, 3],
-
     "num_classes": 90,
-    
-    "__comment__": "total batch size == batch_size * num_grad_accum",
-    "batch_size" : 64,
-    "num_grad_accum": 8,
-
-    "epoch" : 100,
-
-    "__comment__": "initial learning rate",
-    "learning_rate" : 1e-4,
-
-    "__comment__": [
-        "1. Adam",
-        "2. SGD (with momentum=0.9 and nesterov=True)"
-    ],
-    "optimizer" : "Adam",
+    "checkpoint_path": "checkpoints/LPD_mobilenet_v2_keras_pretrained_v1/best-100",
 
     "meta_info":{
         "__comment__": [
@@ -30,17 +16,6 @@
         "feature_extractor": "",
 
         "use_fpn": false,
-        "num_layers": -1
-        
-    },
-
-    "__comment__": "Restore weights from checkpoint",
-    "_checkpoint_path": "pretrained_models/ssd_mobilenet_v2_320x320_coco17_tpu-8/checkpoint/ckpt-0",
-    "checkpoint_path": "checkpoints/LPD_mobilenet_v2_keras_pretrained_v1/best-80", 
-
-    "train_tfrecord": "/root/ijoon/disk2/rudy_dev/dataset/license_plate/plate_detection/train.tfrecord",
-    "test_tfrecord": "/root/ijoon/disk2/rudy_dev/dataset/license_plate/plate_detection/test.tfrecord",
-
-    "augmentation": true,
-    "normalization": true
+        "num_layers": -1   
+    }
 }
