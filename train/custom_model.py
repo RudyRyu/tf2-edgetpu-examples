@@ -6,7 +6,7 @@ import tensorflow as tf
 class CustomDetectorModel(GradientAccumulatorModel):
 
     def __init__(self, detection_model, input_shape, num_classes, 
-                 num_grad_accum=1, **kargs):
+                 num_grad_accum=1, saved_model_path='', **kargs):
         super(CustomDetectorModel, self).__init__(
             num_accum=num_grad_accum, **kargs)
         self.detection_model = detection_model
