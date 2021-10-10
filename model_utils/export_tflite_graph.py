@@ -10,7 +10,7 @@ from model_utils import export_tflite_graph_lib_tf2
 def export_tflite_graph(pipeline_config_path, checkpoint_path, 
                         checkpoint_name=''):
     pipeline_config = pipeline_pb2.TrainEvalPipelineConfig()
-    max_detections = 10
+    max_detections = 5
     config_override = ''
     ssd_use_regular_nms = False
     centernet_include_keypoints = False

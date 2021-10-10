@@ -9,17 +9,17 @@ from train.input_pipeline import generate_tfdataset
 from inference.inference_tflite import InferenceModel, image_inference
 
 # 0. configure
-model_name = 'ShDigit_v1_SSD_text_seg'
-checkpoint_name = 'best-50'
+model_name = 'LPD_mobilenet_v2_keras_pretrained_dropout'
+checkpoint_name = 'best-96'
 
 saved_model_path = f'./checkpoints/{model_name}/saved_model/'
-img_size_wh = [128,64]
-dataset = 'digit_train.tfrecord'
+img_size_hw = [320,320]
+dataset = 'data/test.tfrecord'
 quant_level = 2
-tflite_path = f'./tflite_models/{model_name}_{checkpoint_name}.tflite'
+tflite_path = 'lpd_mobilenet_v2_keras_pretrained_dropout_320.tflite' #f'./tflite_models/{model_name}_{checkpoint_name}.tflite'
 
-test_image_dir = 'inference/test_images'
-result_image_dir = 'inference/result_images'
+test_image_dir = 'inference/test_images/lp'
+result_image_dir = 'inference/result_images/lp'
 
 
 # 1.create saved model

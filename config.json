@@ -4,7 +4,7 @@
     "base_config_path": "model_utils/builder_configs/ssd_mobilenet_v2_plate.config",
 
     "__comment__": "input shape == [height, width, channel]",
-    "input_shape" : [384, 512, 3],
+    "input_shape" : [320, 320, 3],
 
     "num_classes": 90,
     

@@ -47,16 +47,16 @@ if __name__ == '__main__':
         help='trained saved model path')
     parser.add_argument('--dataset', type=str, required=True,
         help='calibration dataset (tfrecord)')
-    parser.add_argument('--image_size', type=str, required=True,
+    parser.add_argument('--image_size_hw', type=str, required=True,
         help='image height and width. ex) 112,112')
     parser.add_argument('--quant_level', type=int, required=False,
         default=0, help='quantization level 0 ~ 2')
     parser.add_argument('--output', type=str, required=True,
         help='output file name')
     args = parser.parse_args()
-    img_size = args.image_size.split(',')
-    width = int(img_size[0])
-    height = int(img_size[1])
+    image_size_hw = args.image_size_hw.split(',')
+    height = int(image_size_hw[0])
+    width = int(image_size_hw[1])
     quant_level = args.quant_level
     dataset = generate_tfdataset(args.dataset, 1, (height, width))
     convert_tflite_int8(args.saved_model, dataset, args.output, quant_level)

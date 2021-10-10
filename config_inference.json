@@ -1,11 +1,11 @@
 {
-    "video_path": "/Users/rudy/Desktop/Development/sample/sample/vehicle/vehicle_sample2_1.mp4",
+    "video_path": "data/vehicle_sample2_2.mp4",
     
     
     "base_config_path": "model_utils/builder_configs/ssd_mobilenet_v2_320x320_coco17_tpu-8.config",
 
     "__comment__": "input shape == [height, width, channel]",
-    "input_shape" : [384, 512, 3],
+    "input_shape" : [240, 320, 3],
     "num_classes": 90,
     "checkpoint_path": "checkpoints/LPD_mobilenet_v2_keras_pretrained_v1/best-100",
 

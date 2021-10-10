@@ -7,6 +7,7 @@ import train.augmentation as aug
 
 TF_AUTOTUNE = tf.data.AUTOTUNE
 
+
 def get_tfdataset_length(dataset: tf.data.TFRecordDataset):
     data_len = 0
     for _ in dataset:
@@ -15,7 +16,7 @@ def get_tfdataset_length(dataset: tf.data.TFRecordDataset):
     return data_len
 
 def generate_tfdataset(tfrecord_path, batch_size, image_size_hw,
-                       augmentation=False, normalization=False):
+                       augmentation=False, normalization=True):
 
     def _parse_tfrecord(serialized):
         description = {
@@ -38,6 +39,7 @@ def generate_tfdataset(tfrecord_path, batch_size, image_size_hw,
 
         return image, label_list, box_list
     
+
     def _preprocess(image, label_list, box_list):
         
         image_shape = image.shape
@@ -54,11 +56,14 @@ def generate_tfdataset(tfrecord_path, batch_size, image_size_hw,
 
         if normalization:
             image = (2.0 / 255.0) * image - 1.0
+        
+        # tf.print(f"before\n{image_shape},{box_shape}",
+        #          f"after\n{image.shape}, {box_list.shape}\n",
+        #          sep="\n")
 
         return image, label_list, box_list
 
     ds = tf.data.TFRecordDataset(tfrecord_path)
-    
     ds = (
         ds
         .map(_parse_tfrecord, num_parallel_calls=TF_AUTOTUNE)
@@ -72,11 +77,52 @@ def generate_tfdataset(tfrecord_path, batch_size, image_size_hw,
         .prefetch(TF_AUTOTUNE)
     )
 
+    # def _preprocess(images, label_lists, box_lists):
+        
+    #     images_shape = images.shape
+    #     box_lists_shape = box_lists.shape
+        
+    #     print('images_shape', images_shape)
+    #     print('box_lists_shape', box_lists_shape)
+
+    #     if augmentation:
+    #         images, box_lists = tf.numpy_function(
+    #             func=aug.augmentation_pipeline,
+    #             inp=[images, box_lists],
+    #             Tout=[tf.float32, tf.float32])
+
+    #         images = tf.ensure_shape(images, images_shape)
+    #         box_lists  = tf.ensure_shape(box_lists, box_lists_shape)
+
+    #     if normalization:
+    #         images = (2.0 / 255.0) * images - 1.0
+        
+    #     # tf.print(f"before\n{image_shape},{box_shape}",
+    #     #          f"after\n{image.shape}, {box_list.shape}\n",
+    #     #          sep="\n")
+
+    #     return images, label_lists, box_lists
+
+    # ds = tf.data.TFRecordDataset(tfrecord_path)
+    # ds = (
+    #     ds
+    #     .map(_parse_tfrecord, num_parallel_calls=TF_AUTOTUNE)
+    #     .cache()
+    #     .shuffle(buffer_size=get_tfdataset_length(ds))
+    #     .apply(tf.data.experimental.dense_to_ragged_batch(batch_size,
+    #         drop_remainder=True))
+    #     .map(lambda images, label_lists, box_lists: _preprocess(
+    #             images, label_lists, box_lists), 
+    #         num_parallel_calls=TF_AUTOTUNE)
+    #     .prefetch(TF_AUTOTUNE)
+    # )
+
     return ds
 
 if __name__ == '__main__':
-    ds = generate_tfdataset('data/digit_valid.tfrecord', 32, [64,128],
-        augmentation=False, normalization=False)
+    ds = generate_tfdataset('/Users/rudy/Desktop/Development/dataset/license_plate/dataset/labeled/plate_detection/test.tfrecord', 
+        64, [384,512],
+        augmentation=True, normalization=False)
 
     for images, label_lists, box_lists in ds.take(5):
         for image, label_list, box_list in zip(images, label_lists, box_lists):
@@ -86,8 +132,18 @@ if __name__ == '__main__':
             print('label', label_list.numpy())
             print('box', box_list.numpy())
             print()
+
             cv2.imshow('img', np_image_bgr)
-            cv2.waitKey()
+            for box in box_list.numpy():
+                x_min = int(box[1]*512)
+                y_min = int(box[0]*384)
+                x_max = int(box[3]*512)
+                y_max = int(box[2]*384)
+
+                cv2.imshow('plate', 
+                    cv2.resize(
+                        np_image_bgr[y_min:y_max, x_min:x_max], (256,128)))
+                cv2.waitKey()
 
 
     # for images, label_lists, box_lists in ds.take(1):
