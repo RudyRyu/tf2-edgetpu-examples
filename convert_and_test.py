@@ -4,7 +4,7 @@ import os
 from model_utils.export_tflite_graph import export_tflite_graph
 
 from convert_tflite.main import convert_tflite_int8
-from train.input_pipeline import make_tfdataset
+from train.input_pipeline import generate_tfdataset
 
 from inference.inference_tflite import InferenceModel, image_inference
 
@@ -29,7 +29,7 @@ export_tflite_graph(meta_info_path+'/meta_info.config', meta_info_path,
 
 
 # 2. convert to tflite
-dataset = make_tfdataset(dataset, 1, img_size_wh, False)
+dataset = generate_tfdataset(dataset, 1, img_size_hw)
 convert_tflite_int8(saved_model_path, dataset, tflite_path, quant_level)
 
 

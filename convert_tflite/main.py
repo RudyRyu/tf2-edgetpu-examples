@@ -1,6 +1,6 @@
 import argparse
 
-from train.input_pipeline import make_tfdataset
+from train.input_pipeline import generate_tfdataset
 
 import tensorflow as tf
 
@@ -58,5 +58,5 @@ if __name__ == '__main__':
     width = int(img_size[0])
     height = int(img_size[1])
     quant_level = args.quant_level
-    dataset = make_tfdataset(args.dataset, 1, (width, height))
+    dataset = generate_tfdataset(args.dataset, 1, (height, width))
     convert_tflite_int8(args.saved_model, dataset, args.output, quant_level)
